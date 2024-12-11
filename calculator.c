@@ -46,27 +46,27 @@ double evaluate(double a, double b, char op) {
     }
 }
 
-// Convert infix to postfix using Shunting-Yard algorithm
+// Convert infix to postfix 
 void infixToPostfix(char *infix, char postfix[][MAX]) {
     char stack[MAX];
     int top = -1, j = 0;
 
     for (int i = 0; i < strlen(infix); i++) {
-        if (isdigit(infix[i]) || infix[i] == '.') { // Number
+        if (isdigit(infix[i]) || infix[i] == '.') { 
             int k = 0;
             while (isdigit(infix[i]) || infix[i] == '.') {
                 postfix[j][k++] = infix[i++];
             }
             postfix[j++][k] = '\0';
             i--;
-        } else if (infix[i] == '(') { // Left parenthesis
+        } else if (infix[i] == '(') { 
             stack[++top] = infix[i];
-        } else if (infix[i] == ')') { // Right parenthesis
+        } else if (infix[i] == ')') {
             while (top >= 0 && stack[top] != '(') {
                 sprintf(postfix[j++], "%c", stack[top--]);
             }
-            top--; // Pop '('
-        } else if (isOperator(infix[i])) { // Operator
+            top--; 
+        } else if (isOperator(infix[i])) { 
             while (top >= 0 && precedence(stack[top]) >= precedence(infix[i])) {
                 sprintf(postfix[j++], "%c", stack[top--]);
             }
@@ -74,7 +74,7 @@ void infixToPostfix(char *infix, char postfix[][MAX]) {
         }
     }
 
-    while (top >= 0) { // Pop remaining operators
+    while (top >= 0) {
         sprintf(postfix[j++], "%c", stack[top--]);
     }
 }
@@ -84,9 +84,9 @@ double evaluatePostfix(char postfix[][MAX], int size) {
     Stack s = {.top = -1};
 
     for (int i = 0; i < size; i++) {
-        if (isdigit(postfix[i][0]) || (postfix[i][0] == '-' && isdigit(postfix[i][1]))) { // Number
+        if (isdigit(postfix[i][0]) || (postfix[i][0] == '-' && isdigit(postfix[i][1]))) { 
             push(&s, atof(postfix[i]));
-        } else { // Operator or function
+        } else { 
             double b = pop(&s);
             double a = pop(&s);
             push(&s, evaluate(a, b, postfix[i][0]));
@@ -101,17 +101,17 @@ int main() {
 
     printf("Enter an expression: ");
     fgets(infix, MAX, stdin);
-    infix[strcspn(infix, "\n")] = '\0'; // Remove newline
+    infix[strcspn(infix, "\n")] = '\0'; 
 
     int size = 0;
 
-    // Convert to postfix notation
+    
     infixToPostfix(infix, postfix);
 
-    // Count number of tokens in postfix array
+   
     while (*postfix[size]) size++;
 
-    // Evaluate the postfix expression
+    
     double result = evaluatePostfix(postfix, size);
 
     printf("Result: %.6lf\n", result);
